@@ -113,7 +113,6 @@ Configurado con:
 4. **Revisar código**: `npm run lint`
 5. **Build producción**: `npm run build`
 
-
 ## 📄 Licencia
 
 ISC

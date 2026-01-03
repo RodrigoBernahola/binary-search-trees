@@ -4,7 +4,7 @@ import prettierConfig from "eslint-config-prettier";
 
 export default [
   js.configs.recommended,
-  prettierConfig, // Desactiva reglas que chocan con Prettier
+  prettierConfig,
 
   {
     ignores: ["dist/**", "node_modules/**", "*.min.js"],
@@ -16,8 +16,6 @@ export default [
       ecmaVersion: 2024,
       sourceType: "module",
       globals: {
-        // Definimos manualmente las globales de navegador y Node
-        // NOTA: NO agregamos __dirname ni __filename porque en ESM no son globales.
         window: "readonly",
         document: "readonly",
         console: "readonly",
@@ -29,9 +27,12 @@ export default [
     },
     rules: {
       "prettier/prettier": "error",
-      "no-unused-vars": "warn", // Cambiado a warn para ser menos agresivo en desarrollo
+      "no-unused-vars": "warn",
       "no-console": "off",
       "no-debugger": "warn",
+      // Desactivamos reglas de espaciado para que Prettier las maneje
+      "space-before-function-paren": "off",
+      "space-before-blocks": "off",
     },
   },
 ];
