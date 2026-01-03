@@ -53,7 +53,11 @@ class Controller {
   }
 
   delete(value) {
+    let actualRoot = this.tree.getRoot();
     this.tree.deleteItem(value);
+    if (this.tree.getRoot() !== actualRoot) {
+      this.tree.setRoot(this.tree.getRoot());
+    }
   }
 }
 let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
@@ -75,7 +79,7 @@ controller.insert(10000);
 
 controller.find(7);
 
-//Eliminaciones múltiples (nodos hojas)
+//Eliminaciones múltiples (nodos hojas).
 controller.delete(7);
 let rootNode = controller.tree.getRoot();
 console.log(rootNode);
@@ -83,6 +87,23 @@ controller.prettyPrint(rootNode);
 controller.delete(2);
 controller.prettyPrint(rootNode);
 
-//Eliminación de nodos con un hijo
+//Eliminación de nodos con un hijo.
 controller.delete(1);
 controller.prettyPrint(rootNode);
+// controller.delete(9);
+// controller.prettyPrint(rootNode);
+// controller.delete(6345);
+// controller.prettyPrint(rootNode);
+
+//Eliminación de nodos con dos hijos.
+// controller.delete(67);
+// controller.prettyPrint(rootNode);
+controller.delete(8);
+
+console.log(rootNode);
+controller.prettyPrint(rootNode);
+
+let rootNode2 = controller.tree.getRoot();
+console.log(rootNode2);
+controller.prettyPrint(rootNode2);
+console.log("pepe");

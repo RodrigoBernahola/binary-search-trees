@@ -3,14 +3,15 @@ import common from "./webpack.common.js";
 
 export default merge(common, {
   mode: "development",
-  devtool: "eval-source-map",
+  devtool: "eval-cheap-module-source-map",
   watchOptions: {
     ignored: /node_modules/,
-    aggregateTimeout: 300,
-    poll: 1000
+    aggregateTimeout: 600,
+    poll: 2000,
   },
   devServer: {
     open: true,
+    hot: true,
     watchFiles: ["./src/template.html"],
   },
 });

@@ -95,25 +95,79 @@ export class Tree {
     let currentNode = this.root;
 
     while (currentNode !== null) {
-      if (value < currentNode.data) {
-        if (currentNode === NodeWithOneChild) {
-          tempChildNode = currentNode.right || currentNode.left;
-          console.log(tempChildNode);
-          parentNode.left = tempChildNode;
-        } else {
-          parentNode = currentNode;
-          currentNode = currentNode.left;
-        }
-      } else if (value > currentNode.data) {
-        if (currentNode === NodeWithOneChild) {
-          tempChildNode = currentNode.right || currentNode.left;
+      if (currentNode.data === value) {
+        tempChildNode = currentNode.right || currentNode.left;
+        if (parentNode.data < value) {
           parentNode.right = tempChildNode;
+          return;
         } else {
-          parentNode = currentNode;
-          currentNode = currentNode.right;
+          parentNode.left = tempChildNode;
+          return;
         }
+      } else if (value < currentNode.data) {
+        parentNode = currentNode;
+        currentNode = currentNode.left;
+      } else if (value > currentNode.data) {
+        parentNode = currentNode;
+        currentNode = currentNode.right;
       }
     }
+  }
+
+  findSuccesor(NodeWithTwoChildren) {
+    let response = NodeWithTwoChildren.right;
+    let rightSubTree = NodeWithTwoChildren.right;
+    while (rightSubTree !== null) {
+      if (rightSubTree.left !== null) {
+        response = rightSubTree.left;
+        rightSubTree = rightSubTree.left;
+        continue;
+      }
+      break;
+    }
+    return response;
+  }
+
+  getParent(NodeWithTwoChildren) {
+    let parentNode = this.root;
+    let currentNode = this.root;
+    let value = NodeWithTwoChildren.data;
+
+    while (currentNode !== null) {
+      if (currentNode.data === value) {
+        return parentNode;
+      } else if (value < currentNode.data) {
+        parentNode = currentNode;
+        currentNode = currentNode.left;
+      } else if (value > currentNode.data) {
+        parentNode = currentNode;
+        currentNode = currentNode.right;
+      }
+    }
+  }
+
+  removeNodeWithTwoChildren(NodeWithTwoChildren) {
+    let succesor = this.findSuccesor(NodeWithTwoChildren);
+    console.log(succesor);
+    let parentNode = this.getParent(NodeWithTwoChildren);
+    //parentNode.right = succesor;
+    if (parentNode.right === NodeWithTwoChildren) {
+      parentNode.right = succesor;
+    } else if (parentNode.left === NodeWithTwoChildren) {
+      parentNode.left = succesor;
+    } else {
+      let rightSubTree = this.getParent(succesor);
+      while (rightSubTree.left !== null) {
+        if (rightSubTree.left === succesor) {
+          rightSubTree.left = succesor.right;
+          break;
+        }
+        rightSubTree = rightSubTree.left;
+      }
+      this.root = succesor;
+      succesor.right = rightSubTree;
+    }
+    succesor.left = NodeWithTwoChildren.left;
   }
 
   deleteItem(value) {
@@ -138,6 +192,7 @@ export class Tree {
         break;
       case 2:
         console.log("Two childs");
+        this.removeNodeWithTwoChildren(searchedValueNode);
         break;
     }
   }
