@@ -59,6 +59,22 @@ class Controller {
       this.tree.setRoot(this.tree.getRoot());
     }
   }
+
+  levelOrderForEach(callback) {
+    this.tree.levelOrderForEach(callback);
+  }
+
+  preOrderForEach(callback) {
+    this.tree.preOrderForEach(callback);
+  }
+
+  inOrderForEach(callback) {
+    this.tree.inOrderForEach(callback);
+  }
+
+  postOrderForEach(callback) {
+    this.tree.postOrderForEach(callback);
+  }
 }
 let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const controller = new Controller();
@@ -106,4 +122,18 @@ controller.prettyPrint(rootNode);
 let rootNode2 = controller.tree.getRoot();
 console.log(rootNode2);
 controller.prettyPrint(rootNode2);
-console.log("pepe");
+
+//Recorrido breadth-first
+function printNode(Node) {
+  console.log("Node number: " + `${Node.data}`);
+}
+console.log("Recorrido breadth-first");
+controller.levelOrderForEach(printNode);
+console.log("Recorrido Pre Order");
+controller.preOrderForEach(printNode);
+console.log("Recorrido In Order");
+controller.prettyPrint(rootNode2);
+controller.inOrderForEach(printNode);
+console.log("Recorrido Post Order");
+controller.prettyPrint(rootNode2);
+controller.postOrderForEach(printNode);

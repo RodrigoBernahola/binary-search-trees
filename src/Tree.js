@@ -150,7 +150,6 @@ export class Tree {
     let succesor = this.findSuccesor(NodeWithTwoChildren);
     console.log(succesor);
     let parentNode = this.getParent(NodeWithTwoChildren);
-    //parentNode.right = succesor;
     if (parentNode.right === NodeWithTwoChildren) {
       parentNode.right = succesor;
     } else if (parentNode.left === NodeWithTwoChildren) {
@@ -194,6 +193,84 @@ export class Tree {
         console.log("Two childs");
         this.removeNodeWithTwoChildren(searchedValueNode);
         break;
+    }
+  }
+
+  levelOrderForEach(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback is required");
+    }
+    if (this.root === null) {
+      throw new Error("Root node is null");
+    }
+
+    let queue = [];
+    queue.push(this.root);
+
+    while (queue.length !== 0) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
+      callback(queue.shift());
+    }
+  }
+
+  preOrderRecursive(node, callback) {
+    if (node === null) return;
+    callback(node);
+    this.preOrderRecursive(node.left, callback);
+    this.preOrderRecursive(node.right, callback);
+  }
+
+  preOrderForEach(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback is required");
+    }
+
+    if (this.root === null) {
+      throw new Error("Root node is null");
+    } else {
+      this.preOrderRecursive(this.root, callback);
+    }
+  }
+
+  inOrderRecursive(node, callback) {
+    if (node === null) return;
+    this.inOrderRecursive(node.left, callback);
+    callback(node);
+    this.inOrderRecursive(node.right, callback);
+  }
+
+  inOrderForEach(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback is required");
+    }
+
+    if (this.root === null) {
+      throw new Error("Root node is null");
+    } else {
+      this.inOrderRecursive(this.root, callback);
+    }
+  }
+
+  postOrderRecursive(node, callback) {
+    if (node === null) return;
+    this.postOrderRecursive(node.left, callback);
+    this.postOrderRecursive(node.right, callback);
+    callback(node);
+  }
+
+  postOrderForEach(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback is required");
+    }
+    if (this.root === null) {
+      throw new Error("Root node is null");
+    } else {
+      this.postOrderRecursive(this.root, callback);
     }
   }
 }
