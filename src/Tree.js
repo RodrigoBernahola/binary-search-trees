@@ -273,4 +273,57 @@ export class Tree {
       this.postOrderRecursive(this.root, callback);
     }
   }
+
+  height(value) {
+    let searchedNode = this.find(value);
+
+    if (searchedNode === null) {
+      return null;
+    }
+
+    let leftCount = 0;
+    let righCount = 0;
+    let currentNode;
+
+    if (searchedNode.left !== null) {
+      currentNode = searchedNode.left;
+      while (currentNode !== null) {
+        leftCount++;
+        currentNode = currentNode.left;
+      }
+    }
+    if (searchedNode.right !== null) {
+      currentNode = searchedNode.right;
+      while (currentNode !== null) {
+        righCount++;
+        currentNode = currentNode.right;
+      }
+    }
+    let maxHeight = Math.max(leftCount, righCount);
+    return maxHeight;
+  }
+
+  depthRecursive(node, value, count = 0) {
+    if (node === null) return 0;
+
+    if (value < node.data) {
+      count += this.depthRecursive(node.left, value, 1);
+    } else if (value > node.data) {
+      count += this.depthRecursive(node.right, value, 1);
+    } else {
+      return count++;
+    }
+
+    return count;
+  }
+
+  depth(value) {
+    if (this.root === null) {
+      return null;
+    }
+    if (this.root.data === value) {
+      return 0;
+    }
+    return this.depthRecursive(this.root, value);
+  }
 }

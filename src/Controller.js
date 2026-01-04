@@ -75,6 +75,14 @@ class Controller {
   postOrderForEach(callback) {
     this.tree.postOrderForEach(callback);
   }
+
+  height(value) {
+    console.log(this.tree.height(value));
+  }
+
+  depth(value) {
+    console.log(this.tree.depth(value));
+  }
 }
 let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const controller = new Controller();
@@ -137,3 +145,9 @@ controller.inOrderForEach(printNode);
 console.log("Recorrido Post Order");
 controller.prettyPrint(rootNode2);
 controller.postOrderForEach(printNode);
+
+console.log("Height de los nodos con determinado valor");
+controller.height(10000);
+
+console.log("Depth de los nodos con determinado valor");
+controller.depth(4);
