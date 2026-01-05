@@ -1,122 +1,56 @@
-# Template de Desarrollo Web Moderno
+# Binary Search Tree (BST) Implementation
 
-Plantilla preconfigurada con Webpack, ESLint, Prettier y herramientas de desarrollo modernas.
+Una implementación completa y visual de un Árbol Binario de Búsqueda (BST) balanceado en JavaScript, desarrollada como parte del currículo de The Odin Project.
 
-## 🚀 Características
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)
+![Webpack](https://img.shields.io/badge/Webpack-5.0+-8DD6F9?logo=webpack&logoColor=black)
 
-- ⚡ **Webpack 5** - Empaquetado y optimización de código
-- 🎨 **CSS Loader** - Soporte para estilos CSS
-- 🔍 **ESLint** - Análisis de código y detección de errores
-- 💅 **Prettier** - Formateo automático de código
-- 🔥 **Hot Reload** - Recarga automática en desarrollo
-- 📦 **Optimización para producción** - Código minificado y optimizado
+## 📋 Descripción
 
-## 📋 Requisitos
+Este proyecto implementa una estructura de datos de árbol binario que se auto-balancea (o ofrece métodos para rebalancear). Incluye una visualización en consola para entender la estructura del árbol y algoritmos de recorrido (traversal) tanto en profundidad como en anchura.
 
-- Node.js >= 14.0.0
-- npm >= 6.0.0
+### Características Principales
 
-## 🛠️ Instalación
+- **Creación de Árbol Balanceado:** Convierte un array de datos desordenado en un BST balanceado.
+- **Operaciones CRUD:** Inserción y eliminación de nodos manteniendo la integridad del árbol.
+- **Traversals (Recorridos):**
+  - Breadth-First: `levelOrder`
+  - Depth-First: `preOrder`, `inOrder`, `postOrder`
+- **Utilidades:** Cálculo de altura (`height`), profundidad (`depth`) y verificación de balance (`isBalanced`).
+- **Rebalanceo:** Algoritmo para reestructurar un árbol desbalanceado.
 
-```bash
-# Clonar el repositorio
-git clone <url-del-repositorio>
+## 🚀 Instalación y Uso
 
-# Entrar al directorio
-cd practica-npm-config
+1.  **Clonar el repositorio:**
 
-# Instalar dependencias
-npm install
-```
+    ```bash
+    git clone [https://github.com/rodrigobernahola/binary-search-trees.git](https://github.com/rodrigobernahola/binary-search-trees.git)
+    cd binary-search-trees
+    ```
 
-## 🎯 Comandos disponibles
+2.  **Instalar dependencias:**
 
-### Desarrollo
+    ```bash
+    npm install
+    ```
 
-```bash
-npm run dev           # Inicia servidor de desarrollo en http://localhost:8080
-```
+3.  **Ejecutar en modo desarrollo:**
+    ```bash
+    npm start
+    ```
+    Esto ejecutará el script principal y mostrará la salida en la consola del navegador o terminal (dependiendo de tu configuración de webpack dev server).
 
-### Producción
+## 🛠️ Tecnologías
 
-```bash
-npm run build         # Genera build optimizado en carpeta dist/
-```
+- **Lenguaje:** JavaScript (ES6 Modules)
+- **Empaquetador:** Webpack
+- **Linting/Formatting:** ESLint, Prettier
 
-### Calidad de código
+## ✒️ Autor
 
-```bash
-npm run lint          # Analiza todo el código con ESLint
-npm run lint:fix      # Corrige errores automáticamente
-npm run lint:src      # Analiza solo carpeta src/
-npm run lint:src:fix  # Corrige errores solo en src/
-```
+- **Rodrigo Bernahola** - [Perfil de GitHub](https://github.com/rodrigobernahola)
 
-### Formateo
+---
 
-```bash
-npm run format        # Formatea todo el código con Prettier
-npm run format:check  # Verifica formato sin modificar
-npm run format:src    # Formatea solo carpeta src/
-```
-
-## 📁 Estructura del proyecto
-
-```
-proyecto/
-├── src/                    # Código fuente
-│   ├── index.js           # Punto de entrada JavaScript
-│   ├── styles.css         # Estilos principales
-│   └── template.html      # Plantilla HTML
-├── dist/                   # Build generado (no versionar)
-├── node_modules/          # Dependencias (no versionar)
-├── webpack.common.js      # Configuración compartida de Webpack
-├── webpack.dev.js         # Configuración para desarrollo
-├── webpack.prod.js        # Configuración para producción
-├── eslint.config.js       # Configuración de ESLint
-├── .prettierrc.json       # Configuración de Prettier
-├── .prettierignore        # Archivos ignorados por Prettier
-├── .gitignore             # Archivos ignorados por Git
-└── package.json           # Dependencias y scripts
-```
-
-## 🔧 Configuración
-
-### Webpack
-
-- `webpack.common.js`: Configuración base compartida
-- `webpack.dev.js`: Modo desarrollo con source maps
-- `webpack.prod.js`: Modo producción con optimizaciones
-
-### ESLint
-
-Configurado con:
-
-- Reglas recomendadas de ESLint
-- Integración con Prettier
-- Soporte para ES2024
-
-### Prettier
-
-Configurado con:
-
-- Punto y coma al final
-- Comillas simples
-- 80 caracteres por línea
-- 2 espacios de indentación
-
-## 📝 Flujo de trabajo recomendado
-
-1. **Desarrollo**: `npm run dev`
-2. **Escribir código** en `src/`
-3. **Guardar cambios** (auto-formato con editor)
-4. **Revisar código**: `npm run lint`
-5. **Build producción**: `npm run build`
-
-## 📄 Licencia
-
-ISC
-
-## ✍️ Autor
-
-Rodrigo Bernahola
+_Proyecto creado para [The Odin Project](https://www.theodinproject.com/)_
