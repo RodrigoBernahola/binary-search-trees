@@ -326,4 +326,38 @@ export class Tree {
     }
     return this.depthRecursive(this.root, value);
   }
+
+  isBalancedRecursive(root) {
+    if (root === null) return 0;
+
+    let leftSubTreeHeight = this.isBalancedRecursive(root.left);
+    let rightSubTreeHeight = this.isBalancedRecursive(root.right);
+
+    if (
+      leftSubTreeHeight === -1 ||
+      rightSubTreeHeight === -1 ||
+      Math.abs(leftSubTreeHeight - rightSubTreeHeight) > 1
+    ) {
+      return -1;
+    }
+
+    return Math.max(leftSubTreeHeight, rightSubTreeHeight) + 1;
+  }
+
+  isBalanced() {
+    if (this.root === null) {
+      return false;
+    } else {
+      return this.isBalancedRecursive(this.root) > 1;
+    }
+  }
+
+  rebalance() {
+    let newArray = [];
+    let callback = function (node) {
+      newArray.push(node.data);
+    };
+    this.inOrderForEach(callback);
+    this.root = this.buildTree(newArray, 0, newArray.length - 1);
+  }
 }

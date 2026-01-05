@@ -83,6 +83,13 @@ class Controller {
   depth(value) {
     console.log(this.tree.depth(value));
   }
+  isBalanced() {
+    console.log(this.tree.isBalanced());
+  }
+
+  rebalance() {
+    this.tree.rebalance();
+  }
 }
 let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const controller = new Controller();
@@ -122,32 +129,41 @@ controller.prettyPrint(rootNode);
 //Eliminación de nodos con dos hijos.
 // controller.delete(67);
 // controller.prettyPrint(rootNode);
-controller.delete(8);
+// controller.delete(8);
 
-console.log(rootNode);
-controller.prettyPrint(rootNode);
+// console.log(rootNode);
+// controller.prettyPrint(rootNode);
 
 let rootNode2 = controller.tree.getRoot();
 console.log(rootNode2);
 controller.prettyPrint(rootNode2);
+controller.isBalanced();
+
+controller.rebalance();
+
+let rootNode3 = controller.tree.getRoot();
+console.log(rootNode3);
+controller.prettyPrint(rootNode3);
+controller.isBalanced();
+//<------------Mock section------------------>
 
 //Recorrido breadth-first
-function printNode(Node) {
-  console.log("Node number: " + `${Node.data}`);
-}
-console.log("Recorrido breadth-first");
-controller.levelOrderForEach(printNode);
-console.log("Recorrido Pre Order");
-controller.preOrderForEach(printNode);
-console.log("Recorrido In Order");
-controller.prettyPrint(rootNode2);
-controller.inOrderForEach(printNode);
-console.log("Recorrido Post Order");
-controller.prettyPrint(rootNode2);
-controller.postOrderForEach(printNode);
+// function printNode(Node) {
+//   console.log("Node number: " + `${Node.data}`);
+// }
+// console.log("Recorrido breadth-first");
+// controller.levelOrderForEach(printNode);
+// console.log("Recorrido Pre Order");
+// controller.preOrderForEach(printNode);
+// console.log("Recorrido In Order");
+// controller.prettyPrint(rootNode2);
+// controller.inOrderForEach(printNode);
+// console.log("Recorrido Post Order");
+// controller.prettyPrint(rootNode2);
+// controller.postOrderForEach(printNode);
 
-console.log("Height de los nodos con determinado valor");
-controller.height(10000);
+// console.log("Height de los nodos con determinado valor");
+// controller.height(10000);
 
-console.log("Depth de los nodos con determinado valor");
-controller.depth(4);
+// console.log("Depth de los nodos con determinado valor");
+// controller.depth(4);
