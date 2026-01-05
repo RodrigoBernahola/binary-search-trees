@@ -29,16 +29,20 @@ export class Tree {
       return;
     }
     this._insertRecursive(this.root, value);
+    if (!this.isBalanced()) this.rebalance();
   }
 
   _insertRecursive(node, value) {
+    if (value === node.data) {
+      return;
+    }
     if (value < node.data) {
       if (node.left === null) {
         node.left = new Node(value);
       } else {
         this._insertRecursive(node.left, value);
       }
-    } else if (value > node.data) {
+    } else {
       if (node.right === null) {
         node.right = new Node(value);
       } else {
@@ -66,147 +70,65 @@ export class Tree {
     return null;
   }
 
-  removeLeafNode(leafNode) {
-    let value = leafNode.data;
-    let currentNode = this.root;
-    while (currentNode !== null) {
-      if (value < currentNode.data) {
-        if (currentNode.left === leafNode) {
-          currentNode.left = null;
-          return;
-        } else {
-          currentNode = currentNode.left;
-        }
-      } else if (value > currentNode.data) {
-        if (currentNode.right === leafNode) {
-          currentNode.right = null;
-          return;
-        } else {
-          currentNode = currentNode.right;
-        }
-      }
-    }
-  }
-
-  removeNodeWithOneChild(NodeWithOneChild) {
-    let value = NodeWithOneChild.data;
-    let parentNode = this.root;
-    let tempChildNode;
-    let currentNode = this.root;
-
-    while (currentNode !== null) {
-      if (currentNode.data === value) {
-        tempChildNode = currentNode.right || currentNode.left;
-        if (parentNode.data < value) {
-          parentNode.right = tempChildNode;
-          return;
-        } else {
-          parentNode.left = tempChildNode;
-          return;
-        }
-      } else if (value < currentNode.data) {
-        parentNode = currentNode;
-        currentNode = currentNode.left;
-      } else if (value > currentNode.data) {
-        parentNode = currentNode;
-        currentNode = currentNode.right;
-      }
-    }
-  }
-
-  findSuccesor(NodeWithTwoChildren) {
-    let response = NodeWithTwoChildren.right;
-    let rightSubTree = NodeWithTwoChildren.right;
-    while (rightSubTree !== null) {
-      if (rightSubTree.left !== null) {
-        response = rightSubTree.left;
-        rightSubTree = rightSubTree.left;
-        continue;
-      }
-      break;
-    }
-    return response;
-  }
-
-  getParent(NodeWithTwoChildren) {
-    let parentNode = this.root;
-    let currentNode = this.root;
-    let value = NodeWithTwoChildren.data;
-
-    while (currentNode !== null) {
-      if (currentNode.data === value) {
-        return parentNode;
-      } else if (value < currentNode.data) {
-        parentNode = currentNode;
-        currentNode = currentNode.left;
-      } else if (value > currentNode.data) {
-        parentNode = currentNode;
-        currentNode = currentNode.right;
-      }
-    }
-  }
-
-  removeNodeWithTwoChildren(NodeWithTwoChildren) {
-    let succesor = this.findSuccesor(NodeWithTwoChildren);
-    console.log(succesor);
-    let parentNode = this.getParent(NodeWithTwoChildren);
-    if (parentNode.right === NodeWithTwoChildren) {
-      parentNode.right = succesor;
-    } else if (parentNode.left === NodeWithTwoChildren) {
-      parentNode.left = succesor;
-    } else {
-      let rightSubTree = this.getParent(succesor);
-      while (rightSubTree.left !== null) {
-        if (rightSubTree.left === succesor) {
-          rightSubTree.left = succesor.right;
-          break;
-        }
-        rightSubTree = rightSubTree.left;
-      }
-      this.root = succesor;
-      succesor.right = rightSubTree;
-    }
-    succesor.left = NodeWithTwoChildren.left;
-  }
-
   deleteItem(value) {
-    let numberOfChilds = 0;
-    let searchedValueNode = this.find(value);
-    if (searchedValueNode === null) {
-      console.log("Item not found");
-      return;
-    }
-
-    if (searchedValueNode.left !== null) numberOfChilds++;
-    if (searchedValueNode.right !== null) numberOfChilds++;
-
-    switch (numberOfChilds) {
-      case 0:
-        console.log("Leaf node");
-        this.removeLeafNode(searchedValueNode);
-        break;
-      case 1:
-        console.log("One child");
-        this.removeNodeWithOneChild(searchedValueNode);
-        break;
-      case 2:
-        console.log("Two childs");
-        this.removeNodeWithTwoChildren(searchedValueNode);
-        break;
+    this.root = this._deleteNode(this.root, value);
+    if (this.root !== null && !this.isBalanced()) {
+      this.rebalance();
     }
   }
 
-  levelOrderForEach(callback) {
+  _deleteNode(node, value) {
+    if (node === null) {
+      return null;
+    }
+    if (value < node.data) {
+      node.left = this._deleteNode(node.left, value);
+      return node;
+    } else if (value > node.data) {
+      node.right = this._deleteNode(node.right, value);
+      return node;
+    }
+
+    if (node.left === null && node.right === null) {
+      return null;
+    }
+
+    if (node.left === null) {
+      return node.right;
+    }
+    if (node.right === null) {
+      return node.left;
+    }
+
+    let succesor = this.findMin(node.right);
+
+    node.data = succesor.data;
+    node.right = this._deleteNode(node.right, succesor.data);
+
+    return node;
+  }
+
+  findMin(node) {
+    let current = node;
+    while (current.left !== null) {
+      current = current.left;
+    }
+    return current;
+  }
+
+  _validateTraversal(callback) {
     if (typeof callback !== "function") {
       throw new Error("A callback is required");
     }
     if (this.root === null) {
       throw new Error("Root node is null");
     }
+  }
 
+  levelOrderForEach(callback) {
+    this._validateTraversal(callback);
     let queue = [];
     queue.push(this.root);
-
     while (queue.length !== 0) {
       if (queue[0].left !== null) {
         queue.push(queue[0].left);
@@ -218,23 +140,26 @@ export class Tree {
     }
   }
 
+  preOrderForEach(callback) {
+    this._validateTraversal(callback);
+    this.preOrderRecursive(this.root, callback);
+  }
+
+  inOrderForEach(callback) {
+    this._validateTraversal(callback);
+    this.inOrderRecursive(this.root, callback);
+  }
+
+  postOrderForEach(callback) {
+    this._validateTraversal(callback);
+    this.postOrderRecursive(this.root, callback);
+  }
+
   preOrderRecursive(node, callback) {
     if (node === null) return;
     callback(node);
     this.preOrderRecursive(node.left, callback);
     this.preOrderRecursive(node.right, callback);
-  }
-
-  preOrderForEach(callback) {
-    if (typeof callback !== "function") {
-      throw new Error("A callback is required");
-    }
-
-    if (this.root === null) {
-      throw new Error("Root node is null");
-    } else {
-      this.preOrderRecursive(this.root, callback);
-    }
   }
 
   inOrderRecursive(node, callback) {
@@ -244,18 +169,6 @@ export class Tree {
     this.inOrderRecursive(node.right, callback);
   }
 
-  inOrderForEach(callback) {
-    if (typeof callback !== "function") {
-      throw new Error("A callback is required");
-    }
-
-    if (this.root === null) {
-      throw new Error("Root node is null");
-    } else {
-      this.inOrderRecursive(this.root, callback);
-    }
-  }
-
   postOrderRecursive(node, callback) {
     if (node === null) return;
     this.postOrderRecursive(node.left, callback);
@@ -263,58 +176,19 @@ export class Tree {
     callback(node);
   }
 
-  postOrderForEach(callback) {
-    if (typeof callback !== "function") {
-      throw new Error("A callback is required");
-    }
-    if (this.root === null) {
-      throw new Error("Root node is null");
-    } else {
-      this.postOrderRecursive(this.root, callback);
-    }
-  }
-
   height(value) {
     let searchedNode = this.find(value);
-
     if (searchedNode === null) {
       return null;
     }
-
-    let leftCount = 0;
-    let righCount = 0;
-    let currentNode;
-
-    if (searchedNode.left !== null) {
-      currentNode = searchedNode.left;
-      while (currentNode !== null) {
-        leftCount++;
-        currentNode = currentNode.left;
-      }
-    }
-    if (searchedNode.right !== null) {
-      currentNode = searchedNode.right;
-      while (currentNode !== null) {
-        righCount++;
-        currentNode = currentNode.right;
-      }
-    }
-    let maxHeight = Math.max(leftCount, righCount);
-    return maxHeight;
+    return this._heightRecursive(searchedNode);
   }
 
-  depthRecursive(node, value, count = 0) {
-    if (node === null) return 0;
-
-    if (value < node.data) {
-      count += this.depthRecursive(node.left, value, 1);
-    } else if (value > node.data) {
-      count += this.depthRecursive(node.right, value, 1);
-    } else {
-      return count++;
-    }
-
-    return count;
+  _heightRecursive(node) {
+    if (node === null) return -1;
+    let leftHeight = this._heightRecursive(node.left);
+    let rightHeight = this._heightRecursive(node.right);
+    return Math.max(leftHeight, rightHeight) + 1;
   }
 
   depth(value) {
@@ -324,7 +198,19 @@ export class Tree {
     if (this.root.data === value) {
       return 0;
     }
-    return this.depthRecursive(this.root, value);
+    return this._depthRecursive(this.root, value, 0);
+  }
+
+  _depthRecursive(node, value, currentDepth) {
+    if (node === null) return null;
+    if (value === node.data) {
+      return currentDepth;
+    }
+    if (value < node.data) {
+      return this._depthRecursive(node.left, value, currentDepth + 1);
+    } else {
+      return this._depthRecursive(node.right, value, currentDepth + 1);
+    }
   }
 
   isBalancedRecursive(root) {
@@ -346,10 +232,9 @@ export class Tree {
 
   isBalanced() {
     if (this.root === null) {
-      return false;
-    } else {
-      return this.isBalancedRecursive(this.root) > 1;
+      return true;
     }
+    return this.isBalancedRecursive(this.root) !== -1;
   }
 
   rebalance() {

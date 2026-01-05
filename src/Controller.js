@@ -1,6 +1,4 @@
 import { Tree } from "./Tree.js";
-import "./styles.css";
-
 class Controller {
   constructor() {
     this.tree = null;
@@ -13,10 +11,27 @@ class Controller {
   sortArray(array) {
     return array.sort((a, b) => a - b);
   }
+
+  createRandomArray(size = 15) {
+    let array = [];
+    for (let i = 0; i < size; i++) {
+      array.push(Math.floor(Math.random() * 100));
+    }
+    return array;
+  }
+
+  printTraversal(traversalMethodName) {
+    let result = [];
+    const callback = (node) => result.push(node.data);
+
+    this.tree[traversalMethodName](callback);
+
+    console.log(`${traversalMethodName}: [ ${result.join(", ")} ]`);
+  }
+
   buildTree(array) {
     array = this.removeDuplicates(array);
     array = this.sortArray(array);
-    console.log("Array de entrada sin duplicados y ordenado: ", array);
     const testTree = new Tree(array);
     const root = testTree.buildTree(array, 0, array.length - 1);
     testTree.setRoot(root);
@@ -24,10 +39,8 @@ class Controller {
     return root;
   }
 
-  prettyPrint(node, prefix = "", isLeft = true) {
-    if (node === null) {
-      return;
-    }
+  prettyPrint(node = this.tree.getRoot(), prefix = "", isLeft = true) {
+    if (node === null) return;
     if (node.right !== null) {
       this.prettyPrint(
         node.right,
@@ -41,129 +54,53 @@ class Controller {
     }
   }
 
-  insert(value) {
-    this.tree.insert(value);
-    this.prettyPrint(this.tree.getRoot());
-  }
+  // --- EL SCRIPT "TIE IT ALL TOGETHER" ---
 
-  find(value) {
-    let resNode = this.tree.find(value);
-    console.log(resNode);
-    return resNode;
-  }
+  runDriverScript() {
+    console.log("--- 1. Creando árbol con números aleatorios < 100 ---");
+    const randomArray = this.createRandomArray(20);
+    console.log("Input Array:", randomArray);
+    this.buildTree(randomArray);
+    this.prettyPrint();
 
-  delete(value) {
-    let actualRoot = this.tree.getRoot();
-    this.tree.deleteItem(value);
-    if (this.tree.getRoot() !== actualRoot) {
-      this.tree.setRoot(this.tree.getRoot());
-    }
-  }
+    console.log("\n--- 2. Confirmando si está balanceado ---");
+    console.log("¿Está balanceado?:", this.tree.isBalanced() ? "SÍ" : "NO");
 
-  levelOrderForEach(callback) {
-    this.tree.levelOrderForEach(callback);
-  }
+    console.log(
+      "\n--- 3. Imprimiendo elementos (Level, Pre, Post, In Order) ---",
+    );
+    this.printTraversal("levelOrderForEach");
+    this.printTraversal("preOrderForEach");
+    this.printTraversal("postOrderForEach");
+    this.printTraversal("inOrderForEach");
 
-  preOrderForEach(callback) {
-    this.tree.preOrderForEach(callback);
-  }
+    console.log(
+      "\n--- 4. Desbalanceando el árbol (Insertando números > 100) ---",
+    );
+    [101, 150, 200, 250, 300].forEach((num) => {
+      console.log(`Insertando ${num}...`);
+      this.tree.insert(num);
+    });
+    this.prettyPrint();
 
-  inOrderForEach(callback) {
-    this.tree.inOrderForEach(callback);
-  }
+    console.log("\n--- 5. Confirmando si está desbalanceado ---");
+    console.log("¿Está balanceado?:", this.tree.isBalanced() ? "SÍ" : "NO");
 
-  postOrderForEach(callback) {
-    this.tree.postOrderForEach(callback);
-  }
-
-  height(value) {
-    console.log(this.tree.height(value));
-  }
-
-  depth(value) {
-    console.log(this.tree.depth(value));
-  }
-  isBalanced() {
-    console.log(this.tree.isBalanced());
-  }
-
-  rebalance() {
+    console.log("\n--- 6. Rebalanceando el árbol ---");
     this.tree.rebalance();
+    this.prettyPrint();
+
+    console.log("\n--- 7. Confirmando si está balanceado tras rebalancear ---");
+    console.log("¿Está balanceado?:", this.tree.isBalanced() ? "SÍ" : "NO");
+
+    console.log("\n--- 8. Imprimiendo elementos finales ---");
+    this.printTraversal("levelOrderForEach");
+    this.printTraversal("preOrderForEach");
+    this.printTraversal("postOrderForEach");
+    this.printTraversal("inOrderForEach");
   }
 }
-let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+
+// Ejecución
 const controller = new Controller();
-const rootRes = controller.buildTree(testArray);
-controller.prettyPrint(rootRes);
-
-// Inserciones múltiples
-controller.insert(2);
-// controller.insert(10);
-// controller.insert(100);
-controller.insert(10000);
-
-//Búsqueda de valores particulares en el BST.
-// controller.find(8);
-// controller.find(5);
-// controller.find(4);
-// controller.find(10);
-
-controller.find(7);
-
-//Eliminaciones múltiples (nodos hojas).
-controller.delete(7);
-let rootNode = controller.tree.getRoot();
-console.log(rootNode);
-controller.prettyPrint(rootNode);
-controller.delete(2);
-controller.prettyPrint(rootNode);
-
-//Eliminación de nodos con un hijo.
-controller.delete(1);
-controller.prettyPrint(rootNode);
-// controller.delete(9);
-// controller.prettyPrint(rootNode);
-// controller.delete(6345);
-// controller.prettyPrint(rootNode);
-
-//Eliminación de nodos con dos hijos.
-// controller.delete(67);
-// controller.prettyPrint(rootNode);
-// controller.delete(8);
-
-// console.log(rootNode);
-// controller.prettyPrint(rootNode);
-
-let rootNode2 = controller.tree.getRoot();
-console.log(rootNode2);
-controller.prettyPrint(rootNode2);
-controller.isBalanced();
-
-controller.rebalance();
-
-let rootNode3 = controller.tree.getRoot();
-console.log(rootNode3);
-controller.prettyPrint(rootNode3);
-controller.isBalanced();
-//<------------Mock section------------------>
-
-//Recorrido breadth-first
-// function printNode(Node) {
-//   console.log("Node number: " + `${Node.data}`);
-// }
-// console.log("Recorrido breadth-first");
-// controller.levelOrderForEach(printNode);
-// console.log("Recorrido Pre Order");
-// controller.preOrderForEach(printNode);
-// console.log("Recorrido In Order");
-// controller.prettyPrint(rootNode2);
-// controller.inOrderForEach(printNode);
-// console.log("Recorrido Post Order");
-// controller.prettyPrint(rootNode2);
-// controller.postOrderForEach(printNode);
-
-// console.log("Height de los nodos con determinado valor");
-// controller.height(10000);
-
-// console.log("Depth de los nodos con determinado valor");
-// controller.depth(4);
+controller.runDriverScript();
